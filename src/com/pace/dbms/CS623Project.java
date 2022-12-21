@@ -22,6 +22,7 @@ public class CS623Project {
 	public void setConnection() {
     	
     	try {
+    		
     		Class.forName("org.postgresql.Driver");
     		conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "postgres");
     		
@@ -32,7 +33,8 @@ public class CS623Project {
     		this.getConn().setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 	    } 
     	catch (Exception e) {
-	         e.printStackTrace();
+			System.out.println("An exception was thrown while setting up connection to postgres");
+	        e.printStackTrace();
 	    }
     }
 	
@@ -43,16 +45,16 @@ public class CS623Project {
 		try {
 			
 			stmt= conn.createStatement();
-			String createTableProd = "CREATE TABLE Product(prod_id CHAR(10), pname VARCHAR(30), price decimal)";
-			String createTableDepot= "create Table Depot(Dep_id char(20),address varchar(25),volume integer)";
-			String createTableStock= "create table Stock(prod_id char(20),Dep_id char(20),quantity integer)";
+			String createTableProd = "create table Product(prod_id CHAR(10), pname VARCHAR(30), price decimal)";
+			String createTableDepot= "create table Depot(dep_id char(20),address varchar(25),volume integer)";
+			String createTableStock= "create table Stock(prod_id char(20),dep_id char(20),quantity integer)";
 			stmt.executeUpdate(createTableProd);
 			stmt.executeUpdate(createTableDepot);
 			stmt.executeUpdate(createTableStock);
 			
 		} 
 		catch (SQLException e) {
-			System.out.println("An exception was thrown");
+			System.out.println("An exception was thrown while creating tables");
 			e.printStackTrace();
 			
 			// For atomicity
@@ -92,7 +94,7 @@ public class CS623Project {
 			query.close();
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("An exception was thrown when inserting values");
 			e.printStackTrace();
 			this.getConn().rollback();
 			query.close();
@@ -122,7 +124,7 @@ public class CS623Project {
 
 		} 
 		catch (SQLException e) {
-			System.out.println("An exception was thrown");
+			System.out.println("An exception was thrown when adding constraint");
 			e.printStackTrace();
 			
 			// For atomicity
@@ -143,7 +145,7 @@ public class CS623Project {
 			query.execute("delete from depot where dep_id='D1'");
 		}
 		catch (SQLException e) {
-			System.out.println("An exception was thrown");
+			System.out.println("An exception was thrown while doing transactions");
 			e.printStackTrace();
 			
 			// For atomicity
